@@ -109,17 +109,17 @@
     <div class="form-container">
         <form method="get" action="/">
             <label for="product_no">製品番号:</label>
-            <input type="text" id="product_no" name="product_no" value="{{ request.args.get('product_no', '') }}" placeholder="製品番号を入力">
+            <input type="text" id="product_no" name="product_no" value="{{ request.args.get('product_no', '') }}" placeholder="001/002">
             
-            <label for="process">製造方法:</label>
-            <input type="text" id="process" name="process" value="A" placeholder="製造方法を入力">
+            <label for="process">製造工程:</label>
+            <input type="text" id="process" name="process" placeholder="A/B" >
             
             <button type="submit">検索</button>
         </form>
     </div>
     
     <!-- 検索結果があれば表示 -->
-    {% if conditions != [] %}
+    {% if conditions != [] and texts != [] %}
     <h1>条件:</h1>
     <form method="post" action="/save_record">
         <input type="hidden" name="product_no" value="{{ request.args.get('product_no', '') }}">
@@ -137,7 +137,7 @@
                 <td>{{ texts[0][number] }}</td>
                 <td>{{ conditions[0][number] }}</td>
                 <td>
-                    <input type="text" name="resultA{{ number + 1 }}" placeholder="記録を入力">
+                    <input type="text" name="result{{ process }}{{ number + 1 }}" placeholder="記録を入力">
                 </td>
             </tr>
             {% endfor %}

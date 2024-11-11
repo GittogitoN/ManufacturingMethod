@@ -24,13 +24,16 @@ def create_table():
     # 製造方法テーブルの作成
     con.execute("""
         CREATE TABLE IF NOT EXISTS MethodMaster (
-            MethodID INTEGER PRIMARY KEY,
+            MethodID INTEGER ,
             Process TEXT,
             condition1 TEXT,
             condition2 TEXT,
             condition3 TEXT
         )
     """)
+
+
+
 
    
 
@@ -43,6 +46,7 @@ def create_table():
             Text3 TEXT
         )
     """)
+
 
     # コミットして接続を閉じる
     con.commit()
@@ -64,7 +68,9 @@ def INS_table():
     INSERT INTO MethodMaster (MethodID, Process, condition1, condition2, condition3) 
     VALUES 
         (1, 'A', 'ConAa', 'ConAb', 'ConAc'),
-        (2, 'A', 'ConAd', 'ConAe', 'ConAf');
+        (2, 'A', 'ConAd', 'ConAe', 'ConAf'),
+        (1, 'B', 'ConBa', 'ConBb', ''),
+        (2, 'B', 'ConBd', 'ConBe', '');
     """
     con.execute(Method_Ins)
     
@@ -72,7 +78,8 @@ def INS_table():
     ProcessText_Ins = """
     INSERT INTO ProcessText (Process, Text1, Text2, Text3) 
     VALUES 
-        ('A', 'Text A1', 'Text A2', 'Text A3');
+        ('A', 'Text A1', 'Text A2', 'Text A3'),
+        ('B', 'Text B1', 'Text B2','');;
     """
     con.execute(ProcessText_Ins)
 

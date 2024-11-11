@@ -41,26 +41,33 @@ def get_db_data(product_no=None, process=None):
 def index():
     # URLのクエリパラメータから製品番号とプロセスを取得
     product_no = request.args.get('product_no')  # 製品番号を取得
-    process = request.args.get('process', 'A')  # processパラメータを取得、デフォルトは 'A'
+    process = request.args.get('process')  # processパラメータを取得、デフォルトは 
 
     # 製品番号とプロセスに基づいてデータを取得
     conditions,texts= get_db_data(product_no, process)
-    x=len(texts[0])
-    numbers = list(range(x))
-   
-    
+
+    #print(conditions)
+    #print(texts)
+
+    if texts !=[]:
+        updated_texts = [tuple(x for x in tup if x != '') for tup in texts]
+        #print(updated_texts)
+        x=len(updated_texts[0])
+        numbers = list(range(x))
+    else:#工程が存在しないとき
+        numbers=[]
     
     # HTMLに条件を渡してレンダリング
-    return render_template('index.html', conditions=conditions, texts=texts,numbers=numbers,product_no=product_no)  # contextを展開して渡す
+    return render_template('index.html', conditions=conditions, texts=texts,numbers=numbers,product_no=product_no,process=process)  # contextを展開して渡す
 
 @app.route('/save_record', methods=['POST'])
 def save_record():
     # フォームから送信されたデータを取得
-    print(request.form)
+    #print(request.form)
 
     #値を取り出す
-    resultA_keys = [key for key, value in request.form.items() if key.startswith('resultA')]
-    resultA_vals = [value for key, value in request.form.items() if key.startswith('resultA')]
+    resultA_keys = [key for key, value in request.form.items() if key.startswith('result')]
+    resultA_vals = [value for key, value in request.form.items() if key.startswith('result')]
     product_no = request.form.get('product_no', '')
 
     #SQLを作成
@@ -75,6 +82,8 @@ def save_record():
 
     # 最終的なUPDATE文を作成
     UPD_result = f"{UPD_result1} {UPD_result2} WHERE ProductNo = '{product_no}'"
+
+    print(UPD_result)
 
     conn = sqlite3.connect(DATABASE)  # データベース名を適宜変更
     cursor = conn.cursor()
