@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>製品システム</title>
+    <style>
+        /* ページ全体のスタイル */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        /* フォーム全体のスタイル */
+        form {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* テーブルのスタイル */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        /* 入力欄のスタイル */
+        input[type="text"][name^="resultA"] {
+            width: calc(100% - 20px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* セクションのタイトル */
+        h2 {
+            color: #333;
+            margin-top: 30px;
+        }
+
+        .form-container {
+            margin-bottom: 30px;
+        }
+
+        /* メッセージ部分 */
+        .no-data {
+            text-align: center;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <h1>製品情報検索</h1>
+    
+    <!-- 製品番号と製造方法（process）で検索 -->
+    <div class="form-container">
+        <form method="get" action="/">
+            <label for="product_no">製品番号:</label>
+            <input type="text" id="product_no" name="product_no" value="{{ request.args.get('product_no', '') }}" placeholder="製品番号を入力">
+            
+            <label for="process">製造方法:</label>
+            <input type="text" id="process" name="process" value="A" placeholder="製造方法を入力">
+            
+            <button type="submit">検索</button>
+        </form>
+    </div>
+    
+    <!-- 検索結果があれば表示 -->
+    {% if conditions != [] %}
+    <h1>条件:</h1>
+    <form method="post" action="/save_record">
+        <input type="hidden" name="product_no" value="{{ request.args.get('product_no', '') }}">
+        
+        <table>
+            <tr>
+                <th>項目</th>
+                <th>条件</th>
+                <th>記録</th>
+            </tr>
+            
+            <!-- conditions は (condition, text) のペアのリストなので、text と condition を表示 -->
+            {% for number in numbers %}
+            <tr>
+                <td>{{ texts[0][number] }}</td>
+                <td>{{ conditions[0][number] }}</td>
+                <td>
+                    <input type="text" name="resultA{{ number + 1 }}" placeholder="記録を入力">
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        
+        <button type="submit">保存</button>
+    </form>
+    {% else %}
+    <p class="no-data">条件に一致するデータはありません。</p>
+    {% endif %}
+</body>
+</html>
